@@ -1,5 +1,6 @@
 package dev.joaorooliveira.room_reserve.domain.funcionario.dto;
 
+import dev.joaorooliveira.room_reserve.domain.funcionario.Funcionario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,4 +21,17 @@ public record FuncionarioRequestDTO(
         String ramal
 
 ) {
+
+    public Funcionario toEntity(){
+        Funcionario funcionario = new Funcionario();
+        preencher(funcionario);
+        return funcionario;
+    }
+
+    private void preencher(Funcionario funcionario) {
+        funcionario.setNome(this.nome);
+        funcionario.setEmail(this.email);
+        funcionario.setRamal(this.ramal);
+    }
+
 }
