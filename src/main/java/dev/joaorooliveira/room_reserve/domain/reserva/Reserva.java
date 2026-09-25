@@ -33,10 +33,10 @@ public class Reserva {
     private LocalDate data;
 
     @Column(name = "hora_inicio",nullable = false)
-    private LocalTime horarioInicio;
+    private LocalTime horaInicio;
 
     @Column(name = "hora_fim",nullable = false)
-    private LocalTime horarioFim;
+    private LocalTime horaFim;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,length = 20)
