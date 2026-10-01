@@ -2,6 +2,7 @@ package dev.joaorooliveira.room_reserve.domain.funcionario;
 
 import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioResponseDTO;
+import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,4 +19,16 @@ public class FuncionarioService {
         Funcionario funcionario = funcionarioRepository.save(funcionarioRequestDTO.toEntity());
         return FuncionarioResponseDTO.fromEntity(funcionario);
     }
+
+    public FuncionarioResponseDTO buscarFuncionarioPorId(Long id) {
+        Funcionario funcionario = buscarFuncionarioPorIdEntidade(id);
+        return FuncionarioResponseDTO.fromEntity(funcionario);
+    }
+
+    private Funcionario buscarFuncionarioPorIdEntidade(Long id) {
+        return funcionarioRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionario não encontrado"));
+    }
+
+
 }
