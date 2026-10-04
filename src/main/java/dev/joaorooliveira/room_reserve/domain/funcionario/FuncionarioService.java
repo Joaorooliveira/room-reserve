@@ -32,6 +32,12 @@ public class FuncionarioService {
                 .map(FuncionarioResponseDTO::fromEntity);
     }
 
+    @Transactional
+    public void deletarFuncionario(Long id) {
+        Funcionario funcionario = buscarFuncionarioPorIdEntidade(id);
+        funcionarioRepository.delete(funcionario);
+    }
+
     private Funcionario buscarFuncionarioPorIdEntidade(Long id) {
         return funcionarioRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionario não encontrado"));
