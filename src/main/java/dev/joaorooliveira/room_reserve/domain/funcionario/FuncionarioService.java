@@ -1,5 +1,6 @@
 package dev.joaorooliveira.room_reserve.domain.funcionario;
 
+import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioAtualizarDTO;
 import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioResponseDTO;
 import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
@@ -33,10 +34,18 @@ public class FuncionarioService {
     }
 
     @Transactional
+    public FuncionarioResponseDTO atualizarFuncionario(Long id, FuncionarioAtualizarDTO funcionarioAtualizarDTO) {
+        Funcionario funcionario = buscarFuncionarioPorIdEntidade(id);
+        funcionarioAtualizarDTO.preencher(funcionario);
+        return FuncionarioResponseDTO.fromEntity(funcionario);
+    }
+
+    @Transactional
     public void deletarFuncionario(Long id) {
         Funcionario funcionario = buscarFuncionarioPorIdEntidade(id);
         funcionarioRepository.delete(funcionario);
     }
+
 
     private Funcionario buscarFuncionarioPorIdEntidade(Long id) {
         return funcionarioRepository.findById(id)
