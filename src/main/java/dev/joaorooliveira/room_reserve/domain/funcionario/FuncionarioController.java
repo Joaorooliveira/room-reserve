@@ -1,5 +1,6 @@
 package dev.joaorooliveira.room_reserve.domain.funcionario;
 
+import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioAtualizarDTO;
 import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.funcionario.dto.FuncionarioResponseDTO;
 import jakarta.validation.Valid;
@@ -47,9 +48,19 @@ public class FuncionarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         funcionarioService.deletarFuncionario(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FuncionarioResponseDTO> atualizar(@PathVariable Long id,
+                                                            @RequestBody
+                                                            @Valid FuncionarioAtualizarDTO funcionarioAtualizarDTO) {
+        FuncionarioResponseDTO funcionarioResponseDTO = funcionarioService.atualizarFuncionario(id,
+                funcionarioAtualizarDTO);
+        return ResponseEntity.ok(funcionarioResponseDTO);
+    }
+
 
 }
