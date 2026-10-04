@@ -1,6 +1,7 @@
 package dev.joaorooliveira.room_reserve.domain.sala;
 
 import dev.joaorooliveira.room_reserve.domain.reserva.ReservaRepository;
+import dev.joaorooliveira.room_reserve.domain.sala.dto.SalaAtualizarDTO;
 import dev.joaorooliveira.room_reserve.domain.sala.dto.SalaFiltroRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.sala.dto.SalaRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.sala.dto.SalaResponseDTO;
@@ -56,9 +57,19 @@ public class SalaService {
         salaRepository.deleteById(id);
     }
 
-    private Sala buscarSalaPorIdInterno(Long id) {
-        return salaRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Sala não encontrada com o ID: " + id));
+    @Transactional
+    public SalaResponseDTO atualizarSala(Long id, SalaAtualizarDTO salaAtualizarDTO) {
+        Sala sala = buscarSalaPorIdInterno(id);
+
+        salaAtualizarDTO.preencher(sala);
+
+        return SalaResponseDTO.fromEntity(sala);
     }
 
+    private Sala buscarSalaPorIdInterno(Long id) {
+        return salaRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Sala não encontrada com o ID: " + id
+                ));
+    }
 }
