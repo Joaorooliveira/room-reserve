@@ -46,4 +46,10 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarioResponseDTO);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
+        funcionarioService.deletarFuncionario(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
