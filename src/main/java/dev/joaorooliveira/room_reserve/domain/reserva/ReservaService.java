@@ -23,6 +23,7 @@ public class ReservaService {
         this.salaRepository = salaRepository;
     }
 
+    // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
     @Transactional
     public ReservaResponseDTO salvarReserva(ReservaRequestDTO reservaRequestDTO) {
 
@@ -43,6 +44,15 @@ public class ReservaService {
         Reserva reservaSalva = reservaRepository.save(reserva);
 
         return ReservaResponseDTO.fromEntity(reservaSalva);
+    }
+
+    public ReservaResponseDTO buscarReservaPorId(Long id) {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Reserva não encontrada"
+                ));
+
+        return ReservaResponseDTO.fromEntity(reserva);
     }
 
 }
