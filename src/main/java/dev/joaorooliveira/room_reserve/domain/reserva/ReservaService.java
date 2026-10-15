@@ -2,11 +2,15 @@ package dev.joaorooliveira.room_reserve.domain.reserva;
 
 import dev.joaorooliveira.room_reserve.domain.funcionario.Funcionario;
 import dev.joaorooliveira.room_reserve.domain.funcionario.FuncionarioRepository;
+import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaFiltroRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaResponseDTO;
 import dev.joaorooliveira.room_reserve.domain.sala.Sala;
 import dev.joaorooliveira.room_reserve.domain.sala.SalaRepository;
 import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
+import dev.joaorooliveira.room_reserve.infra.specification.ReservaSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +50,15 @@ public class ReservaService {
         return ReservaResponseDTO.fromEntity(reservaSalva);
     }
 
+    public Page<ReservaResponseDTO> buscarReservas(
+            ReservaFiltroRequestDTO filtro,
+            Pageable pageable) {
+
+        return reservaRepository
+                .findAll(ReservaSpecification.comFiltros(filtro), pageable)
+                .map(ReservaResponseDTO::fromEntity);
+    }
+
     public ReservaResponseDTO buscarReservaPorId(Long id) {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(
@@ -54,5 +67,6 @@ public class ReservaService {
 
         return ReservaResponseDTO.fromEntity(reserva);
     }
+
 
 }
