@@ -5,9 +5,11 @@ import dev.joaorooliveira.room_reserve.domain.funcionario.FuncionarioRepository;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaFiltroRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaResponseDTO;
+import dev.joaorooliveira.room_reserve.domain.reserva.enums.StatusReservaTipo;
 import dev.joaorooliveira.room_reserve.domain.sala.Sala;
 import dev.joaorooliveira.room_reserve.domain.sala.SalaRepository;
 import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
+import dev.joaorooliveira.room_reserve.infra.exception.RegraNegocioException;
 import dev.joaorooliveira.room_reserve.infra.specification.ReservaSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,6 +68,22 @@ public class ReservaService {
                 ));
 
         return ReservaResponseDTO.fromEntity(reserva);
+    }
+
+    // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
+    @Transactional
+    public void cancelarReserva(Long id) {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Reserva não encontrada"
+                ));
+
+        if (reserva.getStatus() != StatusReservaTipo.AGENDADA) {
+            throw new RegraNegocioException(
+                    "Apenas reservas agendadas podem ser canceladas."
+            );
+        }
+        reserva.setStatus(StatusReservaTipo.CANCELADA);
     }
 
 
