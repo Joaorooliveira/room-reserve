@@ -2,6 +2,7 @@ package dev.joaorooliveira.room_reserve.domain.reserva;
 
 import dev.joaorooliveira.room_reserve.domain.funcionario.Funcionario;
 import dev.joaorooliveira.room_reserve.domain.funcionario.FuncionarioRepository;
+import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaAtualizarDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaFiltroRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaResponseDTO;
@@ -66,6 +67,29 @@ public class ReservaService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(
                         "Reserva não encontrada"
                 ));
+
+        return ReservaResponseDTO.fromEntity(reserva);
+    }
+
+    // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
+    @Transactional
+    public ReservaResponseDTO atualizar(Long id, ReservaAtualizarDTO reservaAtualizarDTO) {
+
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Reserva não encontrada"
+                ));
+
+        Sala sala = reserva.getSala();
+
+        if (reservaAtualizarDTO.salaId() != null) {
+            sala = salaRepository.findById(reservaAtualizarDTO.salaId())
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                            "Sala não encontrada"
+                    ));
+        }
+
+        reservaAtualizarDTO.preencher(reserva, sala);
 
         return ReservaResponseDTO.fromEntity(reserva);
     }
