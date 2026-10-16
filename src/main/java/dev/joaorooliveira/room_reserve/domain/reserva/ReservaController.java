@@ -42,4 +42,10 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservaResponseDTO> buscarPorId(@PathVariable Long id) {
+        ReservaResponseDTO reservaResponseDTO = reservaService.buscarReservaPorId(id);
+        return ResponseEntity.ok(reservaResponseDTO);
+    }
+
 }
