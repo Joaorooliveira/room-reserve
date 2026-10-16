@@ -64,10 +64,7 @@ public class ReservaService {
     }
 
     public ReservaResponseDTO buscarReservaPorId(Long id) {
-        Reserva reserva = reservaRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        "Reserva não encontrada"
-                ));
+        Reserva reserva = buscarReservaPorIdEntidade(id);
 
         return ReservaResponseDTO.fromEntity(reserva);
     }
@@ -76,10 +73,7 @@ public class ReservaService {
     @Transactional
     public ReservaResponseDTO atualizarReserva(Long id, ReservaAtualizarDTO reservaAtualizarDTO) {
 
-        Reserva reserva = reservaRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        "Reserva não encontrada"
-                ));
+        Reserva reserva = buscarReservaPorIdEntidade(id);
 
         Sala sala = reserva.getSala();
 
@@ -98,10 +92,7 @@ public class ReservaService {
     // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
     @Transactional
     public void cancelarReserva(Long id) {
-        Reserva reserva = reservaRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        "Reserva não encontrada"
-                ));
+        Reserva reserva = buscarReservaPorIdEntidade(id);
 
         if (reserva.getStatus() != StatusReservaTipo.AGENDADA) {
             throw new RegraNegocioException(
@@ -111,5 +102,11 @@ public class ReservaService {
         reserva.setStatus(StatusReservaTipo.CANCELADA);
     }
 
+    private Reserva buscarReservaPorIdEntidade(Long id) {
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Reserva não encontrada"
+                ));
+    }
 
 }
