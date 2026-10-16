@@ -74,7 +74,7 @@ public class ReservaService {
 
     // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
     @Transactional
-    public ReservaResponseDTO atualizar(Long id, ReservaAtualizarDTO reservaAtualizarDTO) {
+    public ReservaResponseDTO atualizarReserva(Long id, ReservaAtualizarDTO reservaAtualizarDTO) {
 
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(

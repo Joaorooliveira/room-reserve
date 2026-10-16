@@ -1,5 +1,6 @@
 package dev.joaorooliveira.room_reserve.domain.reserva;
 
+import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaAtualizarDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaFiltroRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaResponseDTO;
@@ -46,6 +47,19 @@ public class ReservaController {
     public ResponseEntity<ReservaResponseDTO> buscarPorId(@PathVariable Long id) {
         ReservaResponseDTO reservaResponseDTO = reservaService.buscarReservaPorId(id);
         return ResponseEntity.ok(reservaResponseDTO);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ReservaResponseDTO> atualizar(@PathVariable Long id,
+                                                        @RequestBody @Valid ReservaAtualizarDTO reservaAtualizarDTO) {
+        ReservaResponseDTO reservaResponseDTO = reservaService.atualizarReserva(id, reservaAtualizarDTO);
+        return ResponseEntity.ok(reservaResponseDTO);
+    }
+
+    @PostMapping("/{id}/cancelar")
+    public ResponseEntity<Void> cancelar(@PathVariable Long id) {
+        reservaService.cancelarReserva(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
