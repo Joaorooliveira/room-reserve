@@ -24,7 +24,8 @@ public class ReservaService {
     private final FuncionarioRepository funcionarioRepository;
     private final SalaRepository salaRepository;
 
-    public ReservaService(ReservaRepository reservaRepository, FuncionarioRepository funcionarioRepository, SalaRepository salaRepository) {
+    public ReservaService(ReservaRepository reservaRepository,
+                          FuncionarioRepository funcionarioRepository, SalaRepository salaRepository) {
         this.reservaRepository = reservaRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.salaRepository = salaRepository;
