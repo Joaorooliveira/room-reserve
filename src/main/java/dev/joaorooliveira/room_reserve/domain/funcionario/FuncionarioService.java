@@ -23,6 +23,9 @@ public class FuncionarioService {
 
     @Transactional
     public FuncionarioResponseDTO salvarFuncionario(FuncionarioRequestDTO funcionarioRequestDTO) {
+        if (funcionarioRepository.existsByEmail(funcionarioRequestDTO.email())) {
+            throw new RegraNegocioException("Já existe um funcionário com esse email.");
+        }
         Funcionario funcionario = funcionarioRepository.save(funcionarioRequestDTO.toEntity());
         return FuncionarioResponseDTO.fromEntity(funcionario);
     }
