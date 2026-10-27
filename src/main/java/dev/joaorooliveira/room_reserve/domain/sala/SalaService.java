@@ -26,6 +26,9 @@ public class SalaService {
 
     @Transactional
     public SalaResponseDTO salvarSala(SalaRequestDTO salaRequestDTO) {
+        if (salaRepository.existsByNome(salaRequestDTO.nome())) {
+            throw new RegraNegocioException("Já existe uma sala com esse nome.");
+        }
         Sala sala = salaRepository.save(salaRequestDTO.toEntity());
         return SalaResponseDTO.fromEntity(sala);
     }
@@ -60,6 +63,14 @@ public class SalaService {
     @Transactional
     public SalaResponseDTO atualizarSala(Long id, SalaAtualizarDTO salaAtualizarDTO) {
         Sala sala = buscarSalaPorIdInterno(id);
+
+        if (salaAtualizarDTO.nome() != null
+                && salaRepository.existsByNomeAndIdNot(salaAtualizarDTO.nome(), id)) {
+
+            throw new RegraNegocioException(
+                    "Já existe uma sala com esse nome."
+            );
+        }
 
         salaAtualizarDTO.preencher(sala);
 
