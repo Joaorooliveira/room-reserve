@@ -43,6 +43,16 @@ public class FuncionarioService {
     @Transactional
     public FuncionarioResponseDTO atualizarFuncionario(Long id, FuncionarioAtualizarDTO funcionarioAtualizarDTO) {
         Funcionario funcionario = buscarFuncionarioPorIdEntidade(id);
+        if (funcionarioAtualizarDTO.email() != null) {
+
+            if (funcionarioRepository.existsByEmailAndIdNot(
+                    funcionarioAtualizarDTO.email(), id)) {
+
+                throw new RegraNegocioException(
+                        "Já existe outro funcionário com esse e-mail."
+                );
+            }
+        }
         funcionarioAtualizarDTO.preencher(funcionario);
         return FuncionarioResponseDTO.fromEntity(funcionario);
     }
