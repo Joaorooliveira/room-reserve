@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long>, JpaSpecificationExecutor<Funcionario> {
     boolean existsByEmail(String email);
+
+    boolean existsByEmailAndIdNot(String email, Long id);
 }
