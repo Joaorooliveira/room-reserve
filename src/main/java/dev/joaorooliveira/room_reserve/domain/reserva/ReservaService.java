@@ -7,6 +7,7 @@ import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaFiltroRequestDT
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaRequestDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.dto.ReservaResponseDTO;
 import dev.joaorooliveira.room_reserve.domain.reserva.enums.StatusReservaTipo;
+import dev.joaorooliveira.room_reserve.domain.reserva.validacoes.criacao.ValidadorSalvarReserva;
 import dev.joaorooliveira.room_reserve.domain.sala.Sala;
 import dev.joaorooliveira.room_reserve.domain.sala.SalaRepository;
 import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
@@ -17,18 +18,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ReservaService {
 
     private final ReservaRepository reservaRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final SalaRepository salaRepository;
+    private final List<ValidadorSalvarReserva> validadoresSalvarReserva;
 
     public ReservaService(ReservaRepository reservaRepository,
-                          FuncionarioRepository funcionarioRepository, SalaRepository salaRepository) {
+                          FuncionarioRepository funcionarioRepository, SalaRepository salaRepository, List<ValidadorSalvarReserva> validadoresSalvarReserva) {
         this.reservaRepository = reservaRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.salaRepository = salaRepository;
+        this.validadoresSalvarReserva = validadoresSalvarReserva;
     }
 
     // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
@@ -46,6 +51,8 @@ public class ReservaService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(
                         "Sala não encontrada"
                 ));
+        validadoresSalvarReserva.forEach(v -> v.validar(sala, reservaRequestDTO.data(),
+                reservaRequestDTO.horaInicio(), reservaRequestDTO.horaFim()));
 
         Reserva reserva = reservaRequestDTO.toEntity(funcionario, sala);
 
