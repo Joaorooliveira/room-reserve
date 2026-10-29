@@ -10,6 +10,7 @@ import dev.joaorooliveira.room_reserve.domain.reserva.enums.StatusReservaTipo;
 import dev.joaorooliveira.room_reserve.domain.reserva.validacoes.criacao.ValidadorSalvarReserva;
 import dev.joaorooliveira.room_reserve.domain.sala.Sala;
 import dev.joaorooliveira.room_reserve.domain.sala.SalaRepository;
+import dev.joaorooliveira.room_reserve.domain.sala.enums.StatusTipo;
 import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
 import dev.joaorooliveira.room_reserve.infra.exception.RegraNegocioException;
 import dev.joaorooliveira.room_reserve.infra.specification.ReservaSpecification;
@@ -36,7 +37,6 @@ public class ReservaService {
         this.validadoresSalvarReserva = validadoresSalvarReserva;
     }
 
-    // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
     @Transactional
     public ReservaResponseDTO salvarReserva(ReservaRequestDTO reservaRequestDTO) {
 
@@ -82,6 +82,12 @@ public class ReservaService {
 
         Reserva reserva = buscarReservaPorIdEntidade(id);
 
+        if (reserva.getStatus() != StatusReservaTipo.AGENDADA) {
+            throw new RegraNegocioException(
+                    "Apenas reservas agendadas podem ser atualizadas."
+            );
+        }
+
         Sala sala = reserva.getSala();
 
         if (reservaAtualizarDTO.salaId() != null) {
@@ -91,6 +97,11 @@ public class ReservaService {
                     ));
         }
 
+        if (sala.getStatus() != StatusTipo.ATIVA) {
+            throw new RegraNegocioException(
+                    "A sala deve estar ativa para atualização da reserva."
+            );
+        }
         reservaAtualizarDTO.preencher(reserva, sala);
 
         return ReservaResponseDTO.fromEntity(reserva);
