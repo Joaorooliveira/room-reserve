@@ -10,7 +10,6 @@ import dev.joaorooliveira.room_reserve.domain.reserva.enums.StatusReservaTipo;
 import dev.joaorooliveira.room_reserve.domain.reserva.validacoes.criacao.ValidadorSalvarReserva;
 import dev.joaorooliveira.room_reserve.domain.sala.Sala;
 import dev.joaorooliveira.room_reserve.domain.sala.SalaRepository;
-import dev.joaorooliveira.room_reserve.domain.sala.enums.StatusTipo;
 import dev.joaorooliveira.room_reserve.infra.exception.EntidadeNaoEncontradaException;
 import dev.joaorooliveira.room_reserve.infra.exception.RegraNegocioException;
 import dev.joaorooliveira.room_reserve.infra.specification.ReservaSpecification;
@@ -95,12 +94,6 @@ public class ReservaService {
                     .orElseThrow(() -> new EntidadeNaoEncontradaException(
                             "Sala não encontrada"
                     ));
-        }
-
-        if (sala.getStatus() != StatusTipo.ATIVA) {
-            throw new RegraNegocioException(
-                    "A sala deve estar ativa para atualização da reserva."
-            );
         }
         reservaAtualizarDTO.preencher(reserva, sala);
 
