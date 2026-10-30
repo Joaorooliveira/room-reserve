@@ -22,4 +22,14 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>, JpaSpec
             LocalTime horaInicio,
             LocalTime horaFim
     );
+
+    // Verifica conflitos de horário ignorando a própria reserva que está sendo atualizada.
+    boolean existsBySalaIdAndDataAndStatusAndHoraFimAfterAndHoraInicioBeforeAndIdNot(
+            Long salaId,
+            LocalDate data,
+            StatusReservaTipo status,
+            LocalTime horaInicio,
+            LocalTime horaFim,
+            Long reservaId
+    );
 }
