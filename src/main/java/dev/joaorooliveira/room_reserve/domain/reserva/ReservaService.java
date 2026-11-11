@@ -132,7 +132,6 @@ public class ReservaService {
         return ReservaResponseDTO.fromEntity(reserva);
     }
 
-    // Faltam validações de horário, disponibilidade da sala e do funcionário, etc.
     @Transactional
     public void cancelarReserva(Long id) {
         Reserva reserva = buscarReservaPorIdEntidade(id);
