@@ -38,7 +38,7 @@ class ValidadorDataHorarioTest {
 
         LocalDate data = LocalDate.now();
         LocalTime horaInicio = LocalTime.MIN;
-
+        
         assertThrows(RegraNegocioException.class, () -> validador.validar(
                 null,
                 null,
